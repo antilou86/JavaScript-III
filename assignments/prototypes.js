@@ -159,8 +159,41 @@ CharacterStats.prototype.takeDamage= function(){
  Hero.prototype.heroBomb = function(target){
    target.healthPoints = target.healthPoints - 8;
    if (target.healthPoints <= 0) {
-    target.destroy();
+    return target.destroy();
   } else {
-    target.takeDamage();
+    return target.takeDamage();
   };
  };
+
+
+ //create new hero and villian
+ const MorgulTheDestroyer = new Villian({
+   createdAt: new Date(),
+   dimensions: {
+     length:1,
+     width:2,
+     height:3,
+   },
+   healthPoints: 10,
+   name: 'Morgul: THE DESTROYER',
+   weapons: ['hate', 'more hate'],
+   language: 'Demonic Orcish'
+ })
+
+ const lilBill = new Hero({
+  createdAt: new Date(),
+  dimensions: {
+    length:1,
+    width:1,
+    height:2,
+  },
+  healthPoints: 12,
+  name: 'Bill',
+  weapons: ['cautious optimism', 'an old slingshot'],
+  language: 'common'
+})
+
+console.log('Lil Bill attacks!' + lilBill.heroBomb(MorgulTheDestroyer));
+console.log('Morgul returns fire! ' + MorgulTheDestroyer.annihilate(lilBill));
+console.log('Lil Bill attacks again! ' + lilBill.heroBomb(MorgulTheDestroyer));
+console.log('Lil Bill stands victorious over the corpse of his defeated foe!')
