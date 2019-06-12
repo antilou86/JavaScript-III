@@ -15,14 +15,28 @@
   * dimensions (These represent the character's size in the video game)
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
-
+function GameObject(stats) {
+  this.createdAt= stats.createdAt;
+  this.name= stats.name;
+  this.dimensions= stats.dimensions;
+}
+GameObject.prototype.destroy= function(){
+  return `${this.name} was removed from the game.`
+};
 /*
   === CharacterStats ===
   * healthPoints
   * takeDamage() // prototype method -> returns the string '<object name> took damage.'
   * should inherit destroy() from GameObject's prototype
 */
-
+function CharacterStats(stats) {
+  GameObject.call(this,stats);
+  this.healthPoints= stats.healthPoints;
+}
+CharacterStats.prototype = Object.create(GameObject.prototype)
+CharacterStats.prototype.takeDamage= function(){
+  return `${this.name} took damage.`
+}
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
   * team
@@ -32,7 +46,16 @@
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
- 
+ function Humanoid(stats){
+   CharacterStats.call(this, stats);
+   this.team= stats.team;
+   this.weapons=stats.weapons;
+   this.language=stats.language;
+ }
+ Humanoid.prototype = Object.create(CharacterStats.prototype);
+ Humanoid.prototype.greet = function(){
+   return `${this.name} offers a greeting in ${this.language}`;
+ };
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
   * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
@@ -41,7 +64,7 @@
 
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
-/*
+
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
@@ -102,9 +125,42 @@
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
+
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+  
+  //creating villian and hero constructors
+
+  //hero
+  function Villian(stats){
+    Humanoid.call(this, stats);
+    this.alignment= 'chaotic-evil';
+  }; 
+ Villian.prototype = Object.create(Humanoid.prototype);
+ //create villian ability
+ Villian.prototype.annihilate = function(target){
+   target.healthPoints = target.healthPoints - 10;
+   if (target.healthPoints <= 0) {
+    return target.destroy();
+  } else {
+    return target.takeDamage();
+  };
+ };
+
+  function Hero(stats){
+    Humanoid.call(this, stats);
+    this.alignment= 'lawful-good';
+  };
+ Hero.prototype = Object.create(Humanoid.prototype);
+  //create hero ability
+ Hero.prototype.heroBomb = function(target){
+   target.healthPoints = target.healthPoints - 8;
+   if (target.healthPoints <= 0) {
+    target.destroy();
+  } else {
+    target.takeDamage();
+  };
+ };
